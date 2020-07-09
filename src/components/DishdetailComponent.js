@@ -1,6 +1,8 @@
-import React  from 'react';
-import { Card, CardImg, CardTitle ,CardBody ,CardText, Breadcrumb, BreadcrumbItem } from "reactstrap";
+import React, { Component }  from 'react';
+import { Card, CardImg, CardTitle ,CardBody ,CardText, Breadcrumb, BreadcrumbItem, Button,
+    Modal, ModalHeader, ModalBody, Label, Row } from "reactstrap";
 import { Link } from 'react-router-dom';
+import { LocalForm, Control, Errors } from 'react-redux-form';
 
     function RenderDish({dish}) {
         if(dish != null) {
@@ -45,10 +47,86 @@ import { Link } from 'react-router-dom';
                 <div>
                     <h4>Comments</h4>
                     <div className="list-unstyled">{comm}</div>
+                    <CommentForm/>
                 </div>
             );
         //}
     }
+
+    const minLength = (len) => (val) => !(val) || val.length >= len;
+    const maxLength = (len) => (val) => !(val) || val.length <= len;
+
+class CommentForm extends Component {
+    constructor(props) {
+        super(props);
+        this.state= {
+            openModal: false
+        };
+        this.toggleModal=this.toggleModal.bind(this);
+        this.handleSubmit=this.handleSubmit.bind(this);
+    }
+
+    toggleModal() {
+        this.setState({ openModal: !this.state.openModal });
+    }
+    
+    handleSubmit(values) {
+        alert('Current State is: '+ JSON.stringify(values));
+        console.log('Current State is: '+ JSON.stringify(values));
+    }
+
+    render() {
+        return (
+            <div>
+                <div>
+                    <Modal isOpen={this.state.openModal} toggle={this.toggleMOdal}>
+                        <ModalHeader toggle={this.toggleModal}>
+                            <strong>Submit Comment</strong>
+                        </ModalHeader>
+                        <ModalBody>
+                            <LocalForm onSubmit={(values)=> this.handleSubmit(values)}>
+                                <div className="form-group">
+                                    <Label htmlFor="rate">Rating</Label>
+                                    <Control.select model=".rate" id="rate" name="rate" className="form-control">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </Control.select>
+                                </div>
+                                <div className="form-group">
+                                    <Label htmlFor="author">Your Name</Label>
+                                    <Control.text model=".author" id="author" name="author" className="form-control"
+                                        validators={{
+                                            minLength: minLength(3),
+                                            maxLength: maxLength(15)
+                                        }} />
+                                    <Errors className="text-danger" model=".author" show="touched" 
+                                        messages={{
+                                        minLength: "Must be greater than 2 characters",
+                                        maxLength: "Must be 15 characters or less"
+                                        }} />
+
+                                </div>
+                                <div className="form-group">
+                                    <Label htmlFor="comment">Comment</Label>
+                                    <Control.textarea model=".comment" name="comment" id="comment" rows="8" className="form-control"/>
+                                </div>
+                                <div className="form-group">
+                                    <Button className="submit" color="primary">Submit</Button>
+                                </div>
+                            </LocalForm>            
+                        </ModalBody>
+                    </Modal>
+                </div>
+                <Button outline onClick={this.toggleModal} color='tranparent'>
+                    <span className="fa fa-pencil"></span> Sumbit Comments
+                </Button>
+            </div>
+        );
+    }
+}
 
 const DishDetail = (props) => {
     return (
