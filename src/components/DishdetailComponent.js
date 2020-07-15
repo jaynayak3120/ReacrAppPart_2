@@ -25,7 +25,7 @@ import { baseUrl } from '../shared/baseUrl';
         }
     }
 
-    function RenderComments({comments, addComment, dishId}) {
+    function RenderComments({comments, addComment, dishId, commentsErrMess}) {
 /*        if(dish==null) {
             return(<div></div>);
         }
@@ -45,13 +45,23 @@ import { baseUrl } from '../shared/baseUrl';
                     </li>
                 );
             });
-            return(
-                <div>
-                    <h4>Comments</h4>
-                    <div className="list-unstyled">{comm}</div>
-                    <CommentForm addComment={addComment} dishId={dishId} />
-                </div>
-            );
+            if(commentsErrMess) {
+                return (
+                    <div className='container'>
+                        <div className='row'>
+                            <h4>{commentsErrMess}</h4>
+                        </div>
+                    </div>
+                );
+            }
+            else
+                return(
+                    <div>
+                        <h4>Comments</h4>
+                        <div className="list-unstyled">{comm}</div>
+                        <CommentForm addComment={addComment} dishId={dishId} />
+                    </div>
+                );
         //}
     }
 
@@ -148,15 +158,6 @@ const DishDetail = (props) => {
             </div>
         );
     }
-    /*else if(props.commentsErrMess) {
-        return (
-            <div className='container'>
-                <div className='row'>
-                    <h4>{props.commentsErrMess}</h4>
-                </div>
-            </div>
-        );
-    }*/
     else if(props.dish!=null) {
         return (
             <div className="container">
@@ -176,7 +177,7 @@ const DishDetail = (props) => {
                         <RenderDish dish={props.dish} />    
                     </div>
                     <div className="col-12 col-md-5 m-1">
-                        <RenderComments comments={props.comments} addComment={props.addComment} dishId={props.dish.id} />
+                        <RenderComments comments={props.comments} addComment={props.addComment} dishId={props.dish.id} commentsErrMess={props.commentsErrMess} />
                     </div>
                 </div>
             </div>
