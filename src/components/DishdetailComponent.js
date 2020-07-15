@@ -148,6 +148,15 @@ const DishDetail = (props) => {
             </div>
         );
     }
+    /*else if(props.commentsErrMess) {
+        return (
+            <div className='container'>
+                <div className='row'>
+                    <h4>{props.commentsErrMess}</h4>
+                </div>
+            </div>
+        );
+    }*/
     else if(props.dish!=null) {
         return (
             <div className="container">
